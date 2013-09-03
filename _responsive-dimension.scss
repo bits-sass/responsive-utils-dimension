@@ -1,0 +1,89 @@
+/* ==========================================================================
+   Responsive dimension utilities
+   ========================================================================== */
+
+/**
+ * Dimension utilities with responsive capability
+ *
+ * See original utilities for more info.
+ */
+
+/* Variables
+   ========================================================================== */
+
+/**
+ * Bits.sass utilities namespace
+ */
+
+$bits-utils-ns: 'bits-' !default;
+
+/**
+ * List of column variations
+ */
+
+$bits-responsive-dimension-columns: (2 3 4 5 6 8 10 12) !default;
+
+/* Main mixin
+   ========================================================================== */
+
+/**
+ * Mixin encapsulating a version of dimension utils at a certain breakpoint
+ */
+
+/**
+ * 1. Eg. 'bits-v4-'.
+ */
+
+@mixin bits-dimension-responsive($breakpoint) {
+  $prefix: unquote("#{$bits-utils-ns}#{$breakpoint}-"); /* 1 */
+
+  .#{$prefix}u-sizeFull {
+    -moz-box-sizing: border-box !important;
+         box-sizing: border-box !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /**
+   * This utility should be used in conjunction with display utilities
+   */
+
+  .#{$prefix}u-sizeAuto {
+    width: auto !important;
+  }
+
+  $bits-responsive-dimension-values-unique: ();
+
+  @each $columns in $bits-responsive-dimension-columns {
+    @for $position from 1 through $columns - 1 {
+      $value: percentage(1 / ($columns / $position));
+
+      @if not index($bits-responsive-dimension-values-unique, $value) {
+        $bits-responsive-dimension-values-unique: append(
+            $bits-responsive-dimension-values-unique,
+            $value
+        )
+      }
+    }
+  }
+
+  @each $value in $bits-responsive-dimension-values-unique {
+    $selectors: ();
+
+    @each $columns in $bits-responsive-dimension-columns {
+      @for $position from 1 through $columns - 1 {
+        $innerValue: percentage(1 / ($columns / $position));
+
+        @if $innerValue == $value {
+          $selectors: $selectors, unquote(".#{$prefix}u-size#{$position}of#{$columns}");
+        }
+      }
+    }
+
+    @if length($selectors) > 0 {
+      #{$selectors} {
+        width: $value !important;
+      }
+    }
+  }
+}

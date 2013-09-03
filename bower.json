@@ -1,0 +1,6 @@
+{
+  "name": "bits-sass-responsive-utils-dimension",
+  "version": "0.1.0",
+  "author": "Lukáš Mladý",
+  "main": "_responsive-dimension.scss"
+}
